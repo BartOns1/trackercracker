@@ -1,4 +1,4 @@
-package be.trackercracker.trackercracker;
+package be.trackercracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
