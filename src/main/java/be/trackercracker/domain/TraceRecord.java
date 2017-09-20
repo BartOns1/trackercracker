@@ -24,6 +24,7 @@ public class TraceRecord {
 
 
 
+    public TraceRecord(){}
     public TraceRecord(List<Coordinate> coordinates, String traceRecordName) {
         this.coordinates = coordinates;
         TraceRecordName = traceRecordName;

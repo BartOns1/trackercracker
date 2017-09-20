@@ -23,6 +23,7 @@ public class Participant {
 
 
 
+    public Participant(){}
     public Participant(String label, TraceRecord traceRecord) {
         this.label = label;
         this.traceRecord = traceRecord;

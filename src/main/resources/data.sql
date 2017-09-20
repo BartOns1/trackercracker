@@ -36,12 +36,12 @@ insert into participant(id, label, trace_record_id) values(2003, 'duck500', 1000
 insert into participant(id, label, trace_record_id) values(2004, 'chacha', 1002);
 insert into participant(id, label, trace_record_id) values(2005, 'blabla', 1003);
 insert into participant(id, label, trace_record_id) values(2006, 'killerroid', 1005);
-insert into group_(id,group_name) values(10,'FightBataljon');
-insert into group_(id,group_name) values(11,'ChinaTown');
+insert into tracker_group(id,group_name) values(10,'FightBataljon');
+insert into tracker_group(id,group_name) values(11,'ChinaTown');
 
-insert into group__participants(group__id, participants_id) values(10,2001);
-insert into group__participants(group__id, participants_id) values(10,2002);
-insert into group__participants(group__id, participants_id) values(10,2005);
-insert into group__participants(group__id, participants_id) values(10,2006);
-insert into group__participants(group__id, participants_id) values(11,2003);
-insert into group__participants(group__id, participants_id) values(11,2004);
+insert into tracker_group_participants(group_id, participants_id) values(10,2001);
+insert into tracker_group_participants(group_id, participants_id) values(10,2002);
+insert into tracker_group_participants(group_id, participants_id) values(10,2005);
+insert into tracker_group_participants(group_id, participants_id) values(10,2006);
+insert into tracker_group_participants(group_id, participants_id) values(11,2003);
+insert into tracker_group_participants(group_id, participants_id) values(11,2004);

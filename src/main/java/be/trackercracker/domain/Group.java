@@ -1,13 +1,18 @@
 package be.trackercracker.domain;
 
+import be.trackercracker.repo.GroupRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by vdabcursist on 19/09/2017.
  */
 @Entity
-public class Group_ {
+@Table(name="tracker_group")
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +22,11 @@ public class Group_ {
     private String groupName;
 
     @OneToMany
-    private List<Participant> participants;
+    private List<Participant> participants = new ArrayList<>();
 
-    public Group_(String groupName, List<Participant> participants) {
+
+    public Group(){}
+    public Group(String groupName, List<Participant> participants) {
         this.groupName = groupName;
         this.participants = participants;
     }
@@ -36,6 +43,7 @@ public class Group_ {
         this.groupName = groupName;
     }
 
+    @JsonIgnore
     public List<Participant> getParticipants() {
         return participants;
     }
