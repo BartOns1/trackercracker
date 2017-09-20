@@ -29,7 +29,6 @@
 <script>
             $("#group-create-form").submit(function(e) {
                 e.preventDefault();
-
                 let p = {
                     groupName: $(this.groupName).val(),
                 };
@@ -43,10 +42,9 @@
                              alert("success");
                     }
                 });
-                alert("hallo");
                 this.reset();
             });
-            }
+
         </script>
 
 </body>

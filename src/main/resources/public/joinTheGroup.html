@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>Join Your Group</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous"/>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<h1 class="jumbotron">Participate</h1>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Label</th>
+            <th>Tracelog</th>
+            <th>Delete Yourself</th>
+        </tr>
+        </thead>
+        <tbody id="passenger-list-data">
+        <tr>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+            <td></td>
+
+        </tr>
+        <tr>
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form id="participant-create-form">
+        <div class="form-group">
+            <label for="label">First name:</label>
+            <input class="form-control" id="label" name="label"/>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Create">
+    </form>
+</div>
+
+<script>
+            $("#participant-create-form").submit(function(e) {
+                e.preventDefault();
+
+//                {
+//                    "id": 1000,
+//                    "firstname": "Natasha",
+//                    "lastname": "Johanson",
+//                    "frequentFlyerMiles": 1574
+//                },
+
+                let p = {
+                    label: $(this.firstname).val(),
+                };
+
+                $.ajax({
+                    method: 'post',
+                    url: '/api/participant',
+                    contentType: 'application/json',
+                    data: JSON.stringify(p), // Better way to do this?
+                    processData: false,
+                    success: function() {
+                        // Refresh data table
+                        loadParticipants();
+
+                    }
+                });
+
+                this.reset();
+            });
+
+            loadParticipants();
+
+            function loadParticipants() {
+                $.getJSON('/api/group/participant/all', function (participants) {
+                    let $tbody = $("#participant-list-data").empty();
+
+                    for (let participant of participants) {
+                        let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("Remove");
+                        $removeButton.click(function(e) {
+                            $.ajax({
+                                method: 'delete',
+                                url: `/api/passenger/${passenger.id}`,
+                                success: loadPassengers
+                            });
+                        });
+
+                        let $row = $('<tr>')
+                            .append($('<td>').text(participant.id))
+                            .append($('<td>').text(participant.label))
+                            .append($('<td>').text(participant.traceRecord))
+                            .append($('<td>').append($removeButton));
+                        $tbody.append($row);
+                    }
+                });
+            }
+        </script>
+
+</body>
+</html>

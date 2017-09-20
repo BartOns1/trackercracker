@@ -25,9 +25,9 @@ public class TraceRecord {
 
 
     public TraceRecord(){}
-    public TraceRecord(List<Coordinate> coordinates, String traceRecordName) {
+    public TraceRecord(List<Coordinate> coordinates) {
         this.coordinates = coordinates;
-        TraceRecordName = traceRecordName;
+        TraceRecordName = this.getId().toString()+".log";
     }
 
     public Integer getId() {
@@ -44,9 +44,5 @@ public class TraceRecord {
 
     public String getTraceRecordName() {
         return TraceRecordName;
-    }
-
-    public void setTraceRecordName(String traceRecordName) {
-        TraceRecordName = traceRecordName;
     }
 }

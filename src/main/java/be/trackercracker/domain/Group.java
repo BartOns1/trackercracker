@@ -43,7 +43,7 @@ public class Group {
         this.groupName = groupName;
     }
 
-    @JsonIgnore
+
     public List<Participant> getParticipants() {
         return participants;
     }

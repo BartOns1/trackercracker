@@ -1,5 +1,7 @@
 package be.trackercracker.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.awt.*;
 
@@ -41,9 +43,11 @@ public class Participant {
         this.label = label;
     }
 
+    @JsonIgnore
     public TraceRecord getTraceRecord() {
         return traceRecord;
     }
+
 
     public void setTraceRecord(TraceRecord traceRecord) {
         this.traceRecord = traceRecord;

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/group")
+@RequestMapping("/api/group/")
 public class MyGroupController {
     @Autowired
     GroupRepository groupRepository;
