@@ -44,14 +44,16 @@ public class MyParticipantController {
         return participantRepository.findOne(id);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, path="/{id}")
+ /*   @RequestMapping(method = RequestMethod.DELETE, path="/{id}")
     public void deleteById(@PathVariable("id") int id) {
         Participant participant = participantRepository.findOne(id);
-        Group group=groupRepository.GetByParticipantsLikeParticipant(participant);
-        System.out.println(group.toString());
+        List<Group> groups=groupRepository.findDistinctByParticipant(participant);
+        System.out.println(groups.toString());
 
-        group.getParticipants().remove(participant);
-        groupRepository.save(group);
+        for(Group group:groups) {
+            group.getParticipants().remove(participant);
+            groupRepository.save(group);
+        }
         //TraceRecord traceRecord=participant.getTraceRecord();
         //Integer trace_id=traceRecord.getId();
         //for (Coordinate coordinate: traceRecord.getCoordinates()) {
@@ -76,5 +78,5 @@ public class MyParticipantController {
         participantRepository.save(input);
         return new ResponseEntity<>(input, HttpStatus.OK);
     }
-
+*/
 }
