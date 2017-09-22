@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vdabcursist on 19/09/2017.
@@ -18,15 +20,18 @@ public class Participant {
     @Column(nullable=false)
     private String label;
 
-    @OneToOne
-    private TraceRecord traceRecord;
-    //@ManyToOne(mappedBy = "participants")
-    //private Group group;
+    @ManyToOne
+    public Group group;
 
+    @Column
+    private String traceRecord;
+
+    @ElementCollection
+    private List<Coordinate> coordinates = new ArrayList<>();
 
 
     public Participant(){}
-    public Participant(String label, TraceRecord traceRecord) {
+    public Participant(String label, String traceRecord) {
         this.label = label;
         this.traceRecord = traceRecord;
     }
@@ -43,13 +48,19 @@ public class Participant {
         this.label = label;
     }
 
-    @JsonIgnore
-    public TraceRecord getTraceRecord() {
+    public String getTraceRecord() {
         return traceRecord;
     }
 
-
-    public void setTraceRecord(TraceRecord traceRecord) {
+    public void setTraceRecord(String traceRecord) {
         this.traceRecord = traceRecord;
+    }
+@JsonIgnore
+    public List<Coordinate> getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(List<Coordinate> coordinates) {
+        this.coordinates = coordinates;
     }
 }

@@ -19,8 +19,8 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Label</th>
+            <th>Group</th>
+            <th>track Label</th>
             <th>Tracelog</th>
             <th>Delete Yourself</th>
         </tr>
@@ -44,9 +44,14 @@
 
     <form id="participant-create-form">
         <div class="form-group">
-            <label for="label">First name:</label>
+            <label for="groupName">Please enter The name of your track group you want to join:</label>
+            <input class="form-control" id="groupName" name="groupName"/>
+        </div>
+        <div class="form-group">
+            <label for="label">Enter a track name to label your track:</label>
             <input class="form-control" id="label" name="label"/>
         </div>
+
         <input type="submit" class="btn btn-primary" value="Create">
     </form>
 </div>
@@ -54,6 +59,7 @@
 <script>
             $("#participant-create-form").submit(function(e) {
                 e.preventDefault();
+               // loadParticipants();
 
 //                {
 //                    "id": 1000,
@@ -65,6 +71,8 @@
                 let p = {
                     label: $(this.firstname).val(),
                 };
+                //let g = {
+
 
                 $.ajax({
                     method: 'post',
@@ -79,13 +87,15 @@
                     }
                 });
 
+
                 this.reset();
             });
 
             loadParticipants();
 
             function loadParticipants() {
-                $.getJSON('/api/group/participant/all', function (participants) {
+                let groupName = "FightBataljon";
+                $.getJSON(`/api/group/${groupName}/participants`, function (participants) {
                     let $tbody = $("#participant-list-data").empty();
 
                     for (let participant of participants) {

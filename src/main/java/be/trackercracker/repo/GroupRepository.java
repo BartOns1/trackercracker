@@ -12,5 +12,5 @@ import java.util.List;
  * Created by vdabcursist on 20/09/2017.
  */
 public interface GroupRepository extends JpaRepository<Group,Integer> {
-   // List<Group> findDistinctByParticipant(Participant participant);
+   // List<Group> findDistinctByParticipants(Participant participant);
     }

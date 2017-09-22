@@ -4,21 +4,15 @@ package be.trackercracker.web;
  * Created by vdabcursist on 20/09/2017.
  */
 
-import be.trackercracker.domain.Group;
 import org.springframework.web.bind.annotation.RestController;
 
-import be.trackercracker.domain.Coordinate;
 import be.trackercracker.domain.Participant;
-import be.trackercracker.domain.TraceRecord;
 import be.trackercracker.repo.GroupRepository;
 import be.trackercracker.repo.ParticipantRepository;
-import be.trackercracker.repo.TraceRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import java.util.List;
 
@@ -31,8 +25,6 @@ public class MyParticipantController {
     @Autowired
     GroupRepository groupRepository;
 
-    @Autowired
-    TraceRecordRepository traceRecordRepository;
 
     @RequestMapping(method = RequestMethod.GET, path="/all", produces = "application/json")
     public List<Participant> getAll() {
@@ -44,16 +36,16 @@ public class MyParticipantController {
         return participantRepository.findOne(id);
     }
 
- /*   @RequestMapping(method = RequestMethod.DELETE, path="/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, path="/{id}")
     public void deleteById(@PathVariable("id") int id) {
         Participant participant = participantRepository.findOne(id);
-        List<Group> groups=groupRepository.findDistinctByParticipant(participant);
-        System.out.println(groups.toString());
+     //   List<Group> groups=groupRepository.findDistinctByParticipants(participant);
+      //  System.out.println(groups.toString());
 
-        for(Group group:groups) {
-            group.getParticipants().remove(participant);
-            groupRepository.save(group);
-        }
+       // for(Group group:groups) {
+       //     group.getParticipants().remove(participant);
+       //     groupRepository.save(group);
+       // }
         //TraceRecord traceRecord=participant.getTraceRecord();
         //Integer trace_id=traceRecord.getId();
         //for (Coordinate coordinate: traceRecord.getCoordinates()) {
@@ -78,5 +70,5 @@ public class MyParticipantController {
         participantRepository.save(input);
         return new ResponseEntity<>(input, HttpStatus.OK);
     }
-*/
+
 }

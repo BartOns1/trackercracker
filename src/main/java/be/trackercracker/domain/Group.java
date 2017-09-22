@@ -21,14 +21,12 @@ public class Group {
     @Column //(nullable = false)
     private String groupName;
 
-    @OneToMany
-    private List<Participant> participants = new ArrayList<>();
 
+    public Group(){
+    }
 
-    public Group(){}
-    public Group(String groupName, List<Participant> participants) {
+    public Group(String groupName) {
         this.groupName = groupName;
-        this.participants = participants;
     }
 
     public Integer getId() {
@@ -41,14 +39,5 @@ public class Group {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
-    }
-
-
-    public List<Participant> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<Participant> participants) {
-        this.participants = participants;
     }
 }
