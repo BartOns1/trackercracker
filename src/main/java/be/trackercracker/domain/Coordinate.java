@@ -32,7 +32,7 @@ public class Coordinate {
     }
 
     public void setTime(Date time) {
-        this.timeStamp = timeStamp;
+        this.timeStamp = time;
     }
 
     public double getLatitude() {
