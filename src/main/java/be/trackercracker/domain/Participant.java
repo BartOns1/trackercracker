@@ -55,7 +55,7 @@ public class Participant {
     public void setTraceRecord(String traceRecord) {
         this.traceRecord = traceRecord;
     }
-@JsonIgnore
+
     public List<Coordinate> getCoordinates() {
         return coordinates;
     }

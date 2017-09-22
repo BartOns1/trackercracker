@@ -2,8 +2,7 @@ package be.trackercracker.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * Created by vdabcursist on 19/09/2017.
@@ -12,24 +11,27 @@ import java.time.ZonedDateTime;
 public class Coordinate {
 
     @Column
-    private ZonedDateTime timeStamp;
+    private Date timeStamp;
     @Column
     private double latitude;
     @Column
     private double longitude;
 
-    public Coordinate(ZonedDateTime timeStamp, double latitude, double longitude) {
+    public Coordinate() {
+    }
+
+    public Coordinate(Date timeStamp, double latitude, double longitude) {
         this.timeStamp = timeStamp;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
 
-    public ZonedDateTime getTime() {
+    public Date getTime() {
         return timeStamp;
     }
 
-    public void setTime(ZonedDateTime time) {
+    public void setTime(Date time) {
         this.timeStamp = timeStamp;
     }
 
