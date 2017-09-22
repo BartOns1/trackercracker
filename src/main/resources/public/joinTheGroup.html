@@ -19,22 +19,13 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Group</th>
             <th>track Label</th>
-            <th>Tracelog</th>
+            <th>color</th>
             <th>Delete Yourself</th>
         </tr>
         </thead>
         <tbody id="passenger-list-data">
         <tr>
-            <td>X</td>
-            <td>X</td>
-            <td>X</td>
-            <td></td>
-
-        </tr>
-        <tr>
-            <td>X</td>
             <td>X</td>
             <td>X</td>
             <td></td>
@@ -44,8 +35,8 @@
 
     <form id="participant-create-form">
         <div class="form-group">
-            <label for="groupName">Please enter The name of your track group you want to join:</label>
-            <input class="form-control" id="groupName" name="groupName"/>
+            <label for="group">Please enter The name of your track group you want to join:</label>
+            <input class="form-control" id="group" name="group"/>
         </div>
         <div class="form-group">
             <label for="label">Enter a track name to label your track:</label>
@@ -59,24 +50,27 @@
 <script>
             $("#participant-create-form").submit(function(e) {
                 e.preventDefault();
-               // loadParticipants();
 
-//                {
-//                    "id": 1000,
-//                    "firstname": "Natasha",
-//                    "lastname": "Johanson",
-//                    "frequentFlyerMiles": 1574
-//                },
+
+               let g = $.ajax({
+                    method: 'get',
+                    url: '/api/group/' + $('#group').val(),
+                    dataType:'json',
+                    async: false
+                    }).responseJSON;
+
 
                 let p = {
-                    label: $(this.firstname).val(),
+                    label: $('#label').val(),
+                    group: g
                 };
-                //let g = {
 
+
+                console.log(p, g);
 
                 $.ajax({
                     method: 'post',
-                    url: '/api/participant',
+                    url: '/api/group/participant',
                     contentType: 'application/json',
                     data: JSON.stringify(p), // Better way to do this?
                     processData: false,
@@ -95,7 +89,7 @@
 
             function loadParticipants() {
                 let groupName = "FightBataljon";
-                $.getJSON(`/api/group/${groupName}/participants`, function (participants) {
+                $.getJSON(`/api/group/participants/${groupName}`, function (participants) {
                     let $tbody = $("#participant-list-data").empty();
 
                     for (let participant of participants) {
@@ -109,7 +103,6 @@
                         });
 
                         let $row = $('<tr>')
-                            .append($('<td>').text(participant.id))
                             .append($('<td>').text(participant.label))
                             .append($('<td>').text(participant.traceRecord))
                             .append($('<td>').append($removeButton));
