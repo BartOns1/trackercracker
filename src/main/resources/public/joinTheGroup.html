@@ -21,15 +21,10 @@
         <tr>
             <th>track Label</th>
             <th>color</th>
-            <th>Delete Yourself</th>
+            <th>Desactivate Your tracking</th>
         </tr>
         </thead>
-        <tbody id="passenger-list-data">
-        <tr>
-            <td>X</td>
-            <td>X</td>
-            <td></td>
-        </tr>
+        <tbody id="participant-list-data">
         </tbody>
     </table>
 
@@ -52,64 +47,75 @@
                 e.preventDefault();
 
 
-               let g = $.ajax({
+
+               var g = $.ajax({
                     method: 'get',
                     url: '/api/group/' + $('#group').val(),
                     dataType:'json',
                     async: false
                     }).responseJSON;
-
-
                 let p = {
                     label: $('#label').val(),
                     group: g
                 };
 
+                if (g==null || g==undefined){alert('This group name does not exist, type an existing tracking group name or make a new group');}
 
-                console.log(p, g);
+                else {
+                                       
 
-                $.ajax({
-                    method: 'post',
-                    url: '/api/group/participant',
-                    contentType: 'application/json',
-                    data: JSON.stringify(p), // Better way to do this?
-                    processData: false,
-                    success: function() {
-                        // Refresh data table
-                        loadParticipants();
+                    $.ajax({
+                        method: 'post',
+                        url: '/api/group/participant',
+                        contentType: 'application/json',
+                        data: JSON.stringify(p), // Better way to do this?
+                        processData: false,
+                        success: function () {
+                            // Refresh data table
 
-                    }
-                });
+                            loadParticipants();
+
+                        }
+                    });
+
+                }
 
 
-                this.reset();
+                function loadParticipants() {
+                    $.getJSON(`/api/group/${g.groupName}/participants`, function (participants) {
+                        let $tbody = $("#participant-list-data").empty();
+
+                        for (let participant of participants) {
+                            let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("Terminate");
+                            $removeButton.click(function(e) {
+                                $.ajax({
+                                    method: 'delete',
+                                    url: `/api/group/participant/${participant.id}`,
+                                    success: function(){
+                                        loadParticipants();
+                                    }
+                                });
+                            });
+                                 let $row = $('<tr>')
+                                .append($('<td>').text(participant.label))
+                                .append($('<td>').text(participant.traceRecord));
+
+                            if(participant.label==p.label){
+                                $row.append($('<td>').append($removeButton));
+                                }
+                                else{
+                                $row.append($('<td>'));
+                                }
+                            $tbody.append($row);
+                        }
+                    });
+                }
+
             });
 
-            loadParticipants();
 
-            function loadParticipants() {
-                let groupName = "FightBataljon";
-                $.getJSON(`/api/group/participants/${groupName}`, function (participants) {
-                    let $tbody = $("#participant-list-data").empty();
 
-                    for (let participant of participants) {
-                        let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("Remove");
-                        $removeButton.click(function(e) {
-                            $.ajax({
-                                method: 'delete',
-                                url: `/api/passenger/${passenger.id}`,
-                                success: loadParticipants()
-                            });
-                        });
 
-                        let $row = $('<tr>')
-                            .append($('<td>').text(participant.label))
-                            .append($('<td>').text(participant.traceRecord))
-                            .append($('<td>').append($removeButton));
-                        $tbody.append($row);
-                    }
-                });
-            }
         </script>
 
 </body>

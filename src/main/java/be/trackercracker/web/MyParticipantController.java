@@ -26,18 +26,18 @@ public class MyParticipantController {
     GroupRepository groupRepository;
 
 
-    @RequestMapping(method = RequestMethod.GET, path="/all", produces = "application/json")
-    public List<Participant> getAll() {
-        return participantRepository.findAll();
-    }
+  //  @RequestMapping(method = RequestMethod.GET, path="/all", produces = "application/json")
+   // public List<Participant> getAll() {
+   //     return participantRepository.findAll();
+  //  }
 
     @RequestMapping(method = RequestMethod.GET, path="/{id}", produces = "application/json")
-    public Participant getById(@PathVariable("id") int id) {
+    public Participant getById(@PathVariable("id") Integer id) {
         return participantRepository.findOne(id);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path="/{id}")
-    public void deleteById(@PathVariable("id") int id) {
+    public void deleteById(@PathVariable("id") Integer id) {
         Participant participant = participantRepository.findOne(id);
      //   List<Group> groups=groupRepository.findDistinctByParticipants(participant);
       //  System.out.println(groups.toString());

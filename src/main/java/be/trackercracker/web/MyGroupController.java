@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/group/")
+@RequestMapping("/api/group")
 public class MyGroupController {
     @Autowired
     GroupRepository groupRepository;
@@ -20,12 +20,12 @@ public class MyGroupController {
     @Autowired
     ParticipantRepository participantRepository;
 
-    @RequestMapping(method = RequestMethod.GET, path="{id}", produces = "application/json")
-    public Group getById(@PathVariable("id") int id) {
-        return groupRepository.findOne(id);
+    @RequestMapping(method = RequestMethod.GET, path="/{name}", produces = "application/json")
+    public Group getById(@PathVariable("name") String name) {
+        return groupRepository.findByGroupName(name);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path="{name}/participants", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, path="/{name}/participants", produces = "application/json")
     public List<Participant> getParticipantsByGroup(@PathVariable("name") String name) {
         return participantRepository.findParticipantByGroupGroupName(name);
     }

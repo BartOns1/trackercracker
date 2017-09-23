@@ -63,4 +63,15 @@ public class Participant {
     public void setCoordinates(List<Coordinate> coordinates) {
         this.coordinates = coordinates;
     }
+
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "id=" + id +
+                ", label='" + label + '\'' +
+                ", group=" + group +
+                ", traceRecord='" + traceRecord + '\'' +
+                ", coordinates=" + coordinates +
+                '}';
+    }
 }
