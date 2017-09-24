@@ -31,9 +31,9 @@ public class MyParticipantController {
    //     return participantRepository.findAll();
   //  }
 
-    @RequestMapping(method = RequestMethod.GET, path="/{id}", produces = "application/json")
-    public Participant getById(@PathVariable("id") Integer id) {
-        return participantRepository.findOne(id);
+    @RequestMapping(method = RequestMethod.GET, path="/{name}", produces = "application/json")
+    public Participant findByLabel(@PathVariable("name") String name) {
+        return participantRepository.findByLabel(name);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path="/{id}")

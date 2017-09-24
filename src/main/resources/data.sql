@@ -6,7 +6,7 @@ insert into participant(id, label,trace_record, color, group_id) values(2001, 'N
 insert into participant(id, label,trace_record, color, group_id) values(2002, 'DDD454','logcord218',   "blue", 10);
 insert into participant(id, label,trace_record, color, group_id) values(2003, 'duck500','logcord515',"darkred", 10);
 insert into participant(id, label,trace_record, color, group_id) values(2004, 'chacha','logcord547', "red",10);
-insert into participant(id, label,trace_record, color, group_id) values(2005, 'blabla', 'logcord214',"lightred",11);
+insert into participant(id, label,trace_record, color, group_id) values(2005, 'blabla', 'logcord214',"black",11);
 insert into participant(id, label,trace_record, color, group_id) values(2006, 'killerroid','logcord965',"purple", 11);
 
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2000, 50.851461, 4.723291, '1986-04-08 12:30');
@@ -17,7 +17,7 @@ insert into participant_coordinates(participant_id, latitude, longitude, time_st
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2000, 50.850428, 4.726703, '1986-04-08 12:32');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2000, 50.850457, 4.727304, '1986-04-08 12:34');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2000, 50.850086, 4.727647, '1986-04-08 12:34');
-insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.848652, 4.715682, '1986-04-08 12:33');
+insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.850798, 4.724531, '1986-04-08 12:33');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.851035, 4.724364, '1986-04-08 12:30');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.851052, 4.723833, '1986-04-08 12:31');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.850869, 4.722750, '1986-04-08 12:31');

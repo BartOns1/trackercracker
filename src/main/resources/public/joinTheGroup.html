@@ -60,16 +60,19 @@
             $("#participant-create-form").submit(function(e) {
                 e.preventDefault();
 
+                var thisLabel=$('#label').val();
+                var thisGroup=$('#group').val();
 
 
                var g = $.ajax({
                     method: 'get',
-                    url: '/api/group/' + $('#group').val(),
+                    url: '/api/group/' + thisGroup,
                     dataType:'json',
                     async: false
                     }).responseJSON;
+
                 let p = {
-                    label: $('#label').val(),
+                    label: thisLabel,
                     group: g
                 };
 
@@ -86,7 +89,7 @@
                     linkParent.empty();
                     $('#main-title').html("tracking");
 
-                    var groupName=$('#group').val();
+
 
                     let $row= $('<tr>')
                         .append($('<th>').text("track names"))
@@ -96,7 +99,7 @@
                    // $table.append($thead);
                   //  console.log($table)
 
-                    $.ajax({
+                        $.ajax({
                         method: 'post',
                         url: '/api/group/participant',
                         contentType: 'application/json',
@@ -114,11 +117,10 @@
 
                 var uluru = {lat: 50.8505, lng: 4.7233};
                 var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 15,
+                    zoom: 12,
                     center: uluru,
                     //mapTypeId: 'terrain'
                 });
-
                 function loadParticipants() {
                     $.getJSON(`/api/group/${g.groupName}/participants`, function (participants) {
                         $("#participant-list-data").empty();
@@ -156,23 +158,25 @@
                         ////initializing the map
 
 
+                        function drawTraces(participants) {
+                            for (let participant of participants) {
+                                var coords = participant.coordinates;
 
-                        for (let participant of participants) {
-                            var coords = participant.coordinates;
+                                var track = new google.maps.Polyline({
+                                    map: map,
+                                    path: coords.map((coordinate) => {
+                                        return {lat: coordinate.latitude, lng: coordinate.longitude}
+                                    }),
+                                    geodesic: true,
+                                    strokeColor: participant.color,
+                                    strokeOpacity: 0.7,
+                                    strokeWeight: 4
+                                });
 
-                            var track = new google.maps.Polyline({
-                                map: map,
-                                path: coords.map((coordinate) => {
-                                    return {lat: coordinate.latitude, lng: coordinate.longitude}
-                                }),
-                                geodesic : true,
-                                strokeColor: participant.color,
-                                strokeOpacity: 0.7,
-                                strokeWeight: 4
-                            });
+                            }
 
                         }
-
+                        drawTraces(participants);
 
 
 
@@ -181,38 +185,61 @@
 
 
                 }
+                var infoWindow = new google.maps.InfoWindow;
+
+                function getCoordinates() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+
+                            $.getJSON(`/api/group/participant/${thisLabel}`,function(thisParticipant) {
+                                let coord = {
+                                    timeStamp: 'todo',
+                                    longitude: pos.lng,
+                                    latitude: pos.lat
+                                };
+
+                                //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
+                                //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
+                                //de tabel "coordinaten" is een embedded tabel van participanten
+                                thisParticipant.coordinates.push(coord);
+console.log(thisParticipant.id)
+                                $.ajax({
+                                    method: 'put',
+                                    url: '/api/group/participant/' + thisLabel,
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(thisParticipant), // Better way to do this?
+                                    processData: false,
+                                    success: function () {
+                                        // Refresh data table
 
 
-              /*  function initMap() {
+                                    }
+                                });
 
+                        })
 
-                    var uluru = {lat: 50.8505, lng: 4.7233};
-                    var map = new google.maps.Map(document.getElementById('map'), {
-                        zoom: 15,
-                        center: uluru
-                    });
-                    var marker = new google.maps.Marker({
-                        position: uluru,
-                        map: map
-                    });
-                    navigator.geolocation.getCurrentPosition(showPosition, errorHandler, {
-                        enableHighAccuracy: true,
-                        maximumAge: 1000,
-                        timeout: 10000
-                    });
-
-                    function showPosition(position) {
-                        map.set//hier nog code om de coordinaten te plaatsen
+                        }
+                        , function () {
+                            handleLocationError(true, infoWindow, map.getCenter());
+                        }, {timeout: 10000})
+                    } else {
+                        // Browser doesn't support Geolocation
+                        handleLocationError(false, infoWindow, map.getCenter());
                     }
+                }
+                getCoordinates();
+                function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                infoWindow.setPosition(pos);
+                infoWindow.setContent(browserHasGeolocation ?
+                    'Error: The Geolocation service failed.' :
+                    'Error: Your browser doesn\'t support geolocation.');
+                infoWindow.open(map);
+            }
 
-                    function errorHandler(error) {
-                        alert("error");
-                    }
-
-
-
-                }*/
-                //initMap();
 
 
             });
