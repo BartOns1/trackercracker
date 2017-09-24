@@ -17,8 +17,18 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     @Column(nullable=false)
     private String label;
+
+    private String color;
 
     @ManyToOne
     public Group group;

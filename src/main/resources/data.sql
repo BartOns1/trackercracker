@@ -1,13 +1,13 @@
 insert into tracker_group(id,group_name) values(10,'FightBataljon');
 insert into tracker_group(id,group_name) values(11,'ChinaTown');
 
-insert into participant(id, label,trace_record, group_id) values(2000, 'Jimi', 'logcord257', 10);
-insert into participant(id, label,trace_record, group_id) values(2001, 'Natascha', 'logcord315', 10);
-insert into participant(id, label,trace_record, group_id) values(2002, 'DDD454','logcord218',  10);
-insert into participant(id, label,trace_record, group_id) values(2003, 'duck500','logcord515', 10);
-insert into participant(id, label,trace_record, group_id) values(2004, 'chacha','logcord547', 10);
-insert into participant(id, label,trace_record, group_id) values(2005, 'blabla', 'logcord214',11);
-insert into participant(id, label,trace_record, group_id) values(2006, 'killerroid','logcord965', 11);
+insert into participant(id, label,trace_record, color, group_id) values(2000, 'Jimi', 'logcord257',    "darkblue", 10);
+insert into participant(id, label,trace_record, color, group_id) values(2001, 'Natascha', 'logcord315',"lightblue", 10);
+insert into participant(id, label,trace_record, color, group_id) values(2002, 'DDD454','logcord218',   "blue", 10);
+insert into participant(id, label,trace_record, color, group_id) values(2003, 'duck500','logcord515',"darkred", 10);
+insert into participant(id, label,trace_record, color, group_id) values(2004, 'chacha','logcord547', "red",10);
+insert into participant(id, label,trace_record, color, group_id) values(2005, 'blabla', 'logcord214',"lightred",11);
+insert into participant(id, label,trace_record, color, group_id) values(2006, 'killerroid','logcord965',"purple", 11);
 
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2000, 50.846652, 4.721682, '1986-04-08 12:30');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2000, 50.846652, 4.721682, '1986-04-08 12:31');

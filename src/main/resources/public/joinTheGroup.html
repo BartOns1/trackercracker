@@ -11,12 +11,20 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 
     <meta charset="UTF-8"/>
+    <style>
+    #map {
+        height: 400px;
+        width: 100%;
+        background: red;
+    }
+    </style>
 </head>
 <body>
-<h1 class="jumbotron">Participate</h1>
+<h1 class="jumbotron" id ="main-title">Participate</h1>
 
-<div class="container">
-    <table class="table table-striped">
+<div id="ultimate-parent" class="container">
+    <div id="register-form">
+    <table class="table table-striped" id = "legend">
         <thead>
         <tr>
             <th>track Label</th>
@@ -40,9 +48,15 @@
 
         <input type="submit" class="btn btn-primary" value="Create">
     </form>
+    </div>
 </div>
+<div id="map"></div>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvqVBvWAak2PLh0YEEwWHx780LEXX72kk&callback=initMap">
+</script>
 
-<script>
+<script type="text/javascript">
+
             $("#participant-create-form").submit(function(e) {
                 e.preventDefault();
 
@@ -62,7 +76,25 @@
                 if (g==null || g==undefined){alert('This group name does not exist, type an existing tracking group name or make a new group');}
 
                 else {
-                                       
+
+                    //let linkRegister = document.getElementById('register-form');
+                    //var linkParent = document.getElementById('ultimate-parent');
+                    //linkParent.removeChild(linkRegister);
+                  //  var linkH1 = document.getElementById('main-title');
+
+                    var linkParent = $('#ultimate-parent');
+                    linkParent.empty();
+                    $('#main-title').html("tracking");
+
+
+
+                    let $row= $('<tr>')
+                        .append($('<th>').text("track names"))
+                        .append($('<th>').text('track color'))
+                        .append($('<th>').text('state'));
+                    var $thead=$('<thead>').append($row);
+                   // $table.append($thead);
+                  //  console.log($table)
 
                     $.ajax({
                         method: 'post',
@@ -83,10 +115,10 @@
 
                 function loadParticipants() {
                     $.getJSON(`/api/group/${g.groupName}/participants`, function (participants) {
-                        let $tbody = $("#participant-list-data").empty();
-
+                        $("#participant-list-data").empty();
+                        let $tbody=$('<tbody>');
                         for (let participant of participants) {
-                            let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("Terminate");
+                            let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("go underwater");
                             $removeButton.click(function(e) {
                                 $.ajax({
                                     method: 'delete',
@@ -98,7 +130,8 @@
                             });
                                  let $row = $('<tr>')
                                 .append($('<td>').text(participant.label))
-                                .append($('<td>').text(participant.traceRecord));
+                                .append($('<td>').text(participant.color));
+
 
                             if(participant.label==p.label){
                                 $row.append($('<td>').append($removeButton));
@@ -107,9 +140,49 @@
                                 $row.append($('<td>'));
                                 }
                             $tbody.append($row);
+
                         }
+                        let  $table=$('<table>').append($thead).append($tbody).addClass("table table-striped");
+                        console.log($table);
+                        linkParent.append($table);
                     });
                 }
+
+
+                function initMap() {
+
+
+                    var uluru = {lat: 50.8505, lng: 4.7233};
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: uluru
+                    });
+                    var marker = new google.maps.Marker({
+                        position: uluru,
+                        map: map
+                    });
+                    navigator.geolocation.getCurrentPosition(showPosition, errorHandler, {
+                        enableHighAccuracy: true,
+                        maximumAge: 1000,
+                        timeout: 10000
+                    });
+                    navigator.geolocation.getCurrentPosition(showPosition, errorHandler, {
+                        enableHighAccuracy: true,
+                        maximumAge: 1000,
+                        timeout: 10000
+                    });
+
+                    function showPosition(position) {
+                        map.set//hier nog code om de coordinaten te plaatsen
+                    }
+
+                    function errorHandler(error) {
+                        alert("error");
+                    }
+
+                }
+                initMap();
+
 
             });
 
