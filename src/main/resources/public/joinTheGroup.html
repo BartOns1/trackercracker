@@ -86,7 +86,7 @@
                     linkParent.empty();
                     $('#main-title').html("tracking");
 
-
+                    var groupName=$('#group').val();
 
                     let $row= $('<tr>')
                         .append($('<th>').text("track names"))
@@ -112,6 +112,12 @@
 
                 }
 
+                var uluru = {lat: 50.8505, lng: 4.7233};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 15,
+                    center: uluru,
+                    //mapTypeId: 'terrain'
+                });
 
                 function loadParticipants() {
                     $.getJSON(`/api/group/${g.groupName}/participants`, function (participants) {
@@ -143,13 +149,41 @@
 
                         }
                         let  $table=$('<table>').append($thead).append($tbody).addClass("table table-striped");
-                        console.log($table);
                         linkParent.append($table);
+
+
+
+                        ////initializing the map
+
+
+
+                        for (let participant of participants) {
+                            var coords = participant.coordinates;
+
+                            var track = new google.maps.Polyline({
+                                map: map,
+                                path: coords.map((coordinate) => {
+                                    return {lat: coordinate.latitude, lng: coordinate.longitude}
+                                }),
+                                geodesic : true,
+                                strokeColor: participant.color,
+                                strokeOpacity: 0.7,
+                                strokeWeight: 4
+                            });
+
+                        }
+
+
+
+
                     });
+
+
+
                 }
 
 
-                function initMap() {
+              /*  function initMap() {
 
 
                     var uluru = {lat: 50.8505, lng: 4.7233};
@@ -166,11 +200,6 @@
                         maximumAge: 1000,
                         timeout: 10000
                     });
-                    navigator.geolocation.getCurrentPosition(showPosition, errorHandler, {
-                        enableHighAccuracy: true,
-                        maximumAge: 1000,
-                        timeout: 10000
-                    });
 
                     function showPosition(position) {
                         map.set//hier nog code om de coordinaten te plaatsen
@@ -180,8 +209,10 @@
                         alert("error");
                     }
 
-                }
-                initMap();
+
+
+                }*/
+                //initMap();
 
 
             });
