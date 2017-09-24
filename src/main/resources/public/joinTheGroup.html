@@ -204,9 +204,8 @@
 
                                 //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
                                 //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
-                                //de tabel "coordinaten" is een embedded tabel van participanten
-                                thisParticipant.coordinates.push(coord);
-console.log(thisParticipant.id)
+                                //de tabel "coordinaten" is een embedded tabel van participanten. Kan ik daarvoor een repository/restcontroller voor schrijven                                thisParticipant.coordinates.push(coord);
+                                console.log(thisParticipant.id)
                                 $.ajax({
                                     method: 'put',
                                     url: '/api/group/participant/' + thisLabel,
