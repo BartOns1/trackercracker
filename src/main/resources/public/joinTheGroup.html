@@ -9,14 +9,13 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 
     <meta charset="UTF-8"/>
     <style>
     #map {
         height: 600px;
         width: 100%;
-        background: red;
+        background: lightgray;
     }
     </style>
 </head>
@@ -122,22 +121,85 @@
                         center: uluru,
                         //mapTypeId: 'terrain'
                     });
+                    var geoHandle;
+
+                    var options;
+                    //var target;
+                    var path = '/api/group/participant/coordinates/' + thisLabel;
+                    function success(position) {
+                        //var crd = pos.coords;
+                        console.log(position);
+
+                        let coord = {
+                            timeStamp: position.timestamp,
+                            longitude: position.coords.longitude,
+                            latitude: position.coords.latitude
+                        };
+
+                        //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
+                        //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
+                        //de tabel "coordinaten" is een embedded tabel van participanten. Kan ik daarvoor een repository/restcontroller voor schrijven                                thisParticipant.coordinates.push(coord);
+
+
+                        $.ajax({
+                            method: 'put',
+                            url: path,
+                            contentType: 'application/json',
+                            data: JSON.stringify(coord), // Better way to do this?
+                            processData: false,
+                            success: function () {
+                                // Refresh data table
+                                loadParticipants();
+
+                            }
+                        });
+
+                        // if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+                        //     console.log('Congratulations, you reached the target');
+                        //     navigator.geolocation.clearWatch(id);
+                        // }
+                    }
+
+                    function error(err) {
+                        console.warn('ERROR(' + err.code + '): ' + err.message);
+                    }
+
+                    // target = {
+                    //    latitude : 0,
+                    //    longitude: 0
+                    //};
+
+                    options = {
+                        enableHighAccuracy: false,
+                        timeout: 5000,
+                        maximumAge: 0
+                    };
+
+                    geoHandle = navigator.geolocation.watchPosition(success, error, options);
+                    console.log(geoHandle);
+
+
+                    var visibleState=true;
+                    let $underwaterButton = $("<button>").addClass("btn").addClass("btn-danger").text("go underwater");
+                    $underwaterButton.click(function (e) {
+                        visibleState=false;
+                        navigator.geolocation.clearWatch(geoHandle);
+                        loadParticipants();
+                    });
+
+                    let $appearButton = $("<button>").addClass("btn").addClass("btn-primary").text("appear");
+                    $appearButton.click(function (e) {
+                        visibleState=true;
+                        geoHandle = navigator.geolocation.watchPosition(success, error, options);
+                        loadParticipants();
+                    });
+
 
                     function loadParticipants() {
                         $.getJSON(`/api/group/${g.groupName}/participants`, function (participants) {
                             $("#participant-list-data").empty();
                             let $tbody = $('<tbody>');
                             for (let participant of participants) {
-                                let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("go underwater");
-                                $removeButton.click(function (e) {
-                                    $.ajax({
-                                        method: 'delete',
-                                        url: `/api/group/participant/${participant.id}`,
-                                        success: function () {
-                                            loadParticipants();
-                                        }
-                                    });
-                                });
 
                                 let $row = $('<tr>')
                                     .append($('<td>').text(participant.label))
@@ -145,10 +207,16 @@
 
 
                                 if (participant.label == p.label) {
-                                    $row.append($('<td>').append($removeButton));
-                                }
+                                    console.log(visibleState);
+                                    if (visibleState){
+                                        $row.append($('<td>').append($underwaterButton));
+                                    }
+                                    else{
+                                        $row.append($('<td>').append($appearButton));
+                                    }
+                                    }
                                 else {
-                                    $row.append($('<td>'));
+                                    $row.append($('<td>').text('active'));
                                 }
                                 $tbody.append($row);
 
@@ -189,60 +257,6 @@
                     }
 
                     /////////////////////////////////
-                    var id,  options;
-                    //var target;
-                    var path = '/api/group/participant/coordinates/' + thisLabel;
-                    function success(position) {
-                        //var crd = pos.coords;
-                        console.log(position);
-
-                        let coord = {
-                            timeStamp: position.timestamp,
-                            longitude: position.coords.longitude,
-                            latitude: position.coords.latitude
-                        };
-
-                        //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
-                        //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
-                        //de tabel "coordinaten" is een embedded tabel van participanten. Kan ik daarvoor een repository/restcontroller voor schrijven                                thisParticipant.coordinates.push(coord);
-
-
-                        $.ajax({
-                            method: 'put',
-                            url: path,
-                            contentType: 'application/json',
-                            data: JSON.stringify(coord), // Better way to do this?
-                            processData: false,
-                            success: function () {
-                                // Refresh data table
-                                loadParticipants();
-
-                            }
-                        });
-
-                       // if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
-                       //     console.log('Congratulations, you reached the target');
-                       //     navigator.geolocation.clearWatch(id);
-                       // }
-                    }
-
-                    function error(err) {
-                        console.warn('ERROR(' + err.code + '): ' + err.message);
-                    }
-
-                   // target = {
-                    //    latitude : 0,
-                    //    longitude: 0
-                    //};
-
-                    options = {
-                        enableHighAccuracy: false,
-                        timeout: 5000,
-                        maximumAge: 0
-                    };
-
-                    id = navigator.geolocation.watchPosition(success, error, options);
-                    console.log(id);
 
 
                     //////////////////////////////////
