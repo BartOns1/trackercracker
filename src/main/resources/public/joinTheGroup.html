@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 
     <meta charset="UTF-8"/>
     <style>
@@ -93,9 +94,9 @@
 
 
                     let $row = $('<tr>')
-                        .append($('<th>').text("who?"))
-                        .append($('<th>').text('color'))
-                        .append($('<th>').text('state'));
+                        .append($('<th>').text("Name Members||"))
+                        .append($('<th>').text('Marker Color||'))
+                        .append($('<th>').text('visibility state'));
                     var $thead = $('<thead>').append($row);
                     // $table.append($thead);
                     //  console.log($table)
@@ -137,6 +138,7 @@
                                         }
                                     });
                                 });
+
                                 let $row = $('<tr>')
                                     .append($('<td>').text(participant.label))
                                     .append($('<td>').text(participant.color));
@@ -186,14 +188,72 @@
 
                     }
 
-                    var infoWindow = new google.maps.InfoWindow;
+                    /////////////////////////////////
+                    var id,  options;
+                    //var target;
+                    var path = '/api/group/participant/coordinates/' + thisLabel;
+                    function success(position) {
+                        //var crd = pos.coords;
+                        console.log(position);
+
+                        let coord = {
+                            timeStamp: position.timestamp,
+                            longitude: position.coords.longitude,
+                            latitude: position.coords.latitude
+                        };
+
+                        //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
+                        //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
+                        //de tabel "coordinaten" is een embedded tabel van participanten. Kan ik daarvoor een repository/restcontroller voor schrijven                                thisParticipant.coordinates.push(coord);
+
+
+                        $.ajax({
+                            method: 'put',
+                            url: path,
+                            contentType: 'application/json',
+                            data: JSON.stringify(coord), // Better way to do this?
+                            processData: false,
+                            success: function () {
+                                // Refresh data table
+                                loadParticipants();
+
+                            }
+                        });
+
+                       // if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+                       //     console.log('Congratulations, you reached the target');
+                       //     navigator.geolocation.clearWatch(id);
+                       // }
+                    }
+
+                    function error(err) {
+                        console.warn('ERROR(' + err.code + '): ' + err.message);
+                    }
+
+                   // target = {
+                    //    latitude : 0,
+                    //    longitude: 0
+                    //};
+
+                    options = {
+                        enableHighAccuracy: false,
+                        timeout: 5000,
+                        maximumAge: 0
+                    };
+
+                    id = navigator.geolocation.watchPosition(success, error, options);
+                    console.log(id);
+
+
+                    //////////////////////////////////
+  /*                  var infoWindow = new google.maps.InfoWindow;
 
                     function getCoordinates() {
                         if (navigator.geolocation) {
                             navigator.geolocation.getCurrentPosition(function (position) {
-
+                                    let now = new Date();
                                     let coord = {
-                                        timeStamp: Date.now(),
+                                        timeStamp: now,
                                         longitude: position.coords.longitude,
                                         latitude: position.coords.latitude
                                     };
@@ -226,9 +286,9 @@
                             // Browser doesn't support Geolocation
                             handleLocationError(false, infoWindow, map.getCenter());
                         }
-                    }
+                    }*/
 
-                    getCoordinates();
+                    //getCoordinates();
 
                     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         infoWindow.setPosition(pos);
