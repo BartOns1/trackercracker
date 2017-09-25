@@ -40,7 +40,8 @@
                     data: JSON.stringify(p),
                     processData: false,
                     success: function() {
-                             alert("success");
+                       window.location.replace('index.html')
+                        //  set('window.location.href'','/index.html')
                     }
                 });
                 this.reset();

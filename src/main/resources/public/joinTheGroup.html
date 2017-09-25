@@ -20,22 +20,10 @@
     </style>
 </head>
 <body>
-<h1 class="jumbotron" id ="main-title">Participate</h1>
+<h1 class="jumbotron" id ="main-title">Join your tracking group</h1>
 
 <div id="ultimate-parent" class="container">
     <div id="register-form">
-    <table class="table table-condensed" id = "legend">
-        <thead>
-        <tr>
-            <th>who?</th>
-            <th>color</th>
-            <th>state</th>
-        </tr>
-        </thead>
-        <tbody id="participant-list-data">
-        </tbody>
-    </table>
-
     <form id="participant-create-form">
         <div class="form-group">
             <label for="group">Please enter The name of your track group you want to join:</label>
@@ -46,7 +34,7 @@
             <input class="form-control" id="label" name="label"/>
         </div>
 
-        <input type="submit" class="btn btn-success" value="CREATE">
+        <input type="submit" class="btn btn-primary" value="CREATE">
         <button type="button" class="btn btn-success" onclick="window.location.href='/index.html'">GO BACK</button>
     </form>
     </div>
@@ -78,33 +66,41 @@
 
                 let p = {
                     label: thisLabel,
-                    group: g
+                    group: g,
+                    color: "cyan"
                 };
 
-                if (g==null || g==undefined){alert('This group name does not exist, type an existing tracking group name or make a new group');}
+                $.getJSON(`/api/group/participant/${thisLabel}`,function (participant){
+                    alert('This name already exist in your tracking group')
+                    console.log(participant);
+                });
+
+
+                if (g==null || g==undefined){
+                    alert('This group name does not exist, type an existing tracking group name or go back to make a new group');
+                }
 
                 else {
 
                     //let linkRegister = document.getElementById('register-form');
                     //var linkParent = document.getElementById('ultimate-parent');
                     //linkParent.removeChild(linkRegister);
-                  //  var linkH1 = document.getElementById('main-title');
+                    //  var linkH1 = document.getElementById('main-title');
 
                     var linkParent = $('#ultimate-parent');
                     linkParent.empty();
                     $('#main-title').html("tracking");
 
 
-
-                    let $row= $('<tr>')
+                    let $row = $('<tr>')
                         .append($('<th>').text("who?"))
                         .append($('<th>').text('color'))
                         .append($('<th>').text('state'));
-                    var $thead=$('<thead>').append($row);
-                   // $table.append($thead);
-                  //  console.log($table)
+                    var $thead = $('<thead>').append($row);
+                    // $table.append($thead);
+                    //  console.log($table)
 
-                        $.ajax({
+                    $.ajax({
                         method: 'post',
                         url: '/api/group/participant',
                         contentType: 'application/json',
@@ -118,130 +114,131 @@
                         }
                     });
 
-                }
 
-                var uluru = {lat: 50.8505, lng: 4.7233};
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 15,
-                    center: uluru,
-                    //mapTypeId: 'terrain'
-                });
-                function loadParticipants() {
-                    $.getJSON(`/api/group/${g.groupName}/participants`, function (participants) {
-                        $("#participant-list-data").empty();
-                        let $tbody=$('<tbody>');
-                        for (let participant of participants) {
-                            let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("go underwater");
-                            $removeButton.click(function(e) {
-                                $.ajax({
-                                    method: 'delete',
-                                    url: `/api/group/participant/${participant.id}`,
-                                    success: function(){
-                                        loadParticipants();
-                                    }
-                                });
-                            });
-                                 let $row = $('<tr>')
-                                .append($('<td>').text(participant.label))
-                                .append($('<td>').text(participant.color));
+                    var uluru = {lat: 50.8505, lng: 4.7233};
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: uluru,
+                        //mapTypeId: 'terrain'
+                    });
 
-
-                            if(participant.label==p.label){
-                                $row.append($('<td>').append($removeButton));
-                                }
-                                else{
-                                $row.append($('<td>'));
-                                }
-                            $tbody.append($row);
-
-                        }
-                        let  $table=$('<table>').append($thead).append($tbody);
-                        $table.addClass("table-striped");
-                        linkParent.append($table);
-
-
-
-                        ////initializing the map
-
-
-                        function drawTraces(participants) {
+                    function loadParticipants() {
+                        $.getJSON(`/api/group/${g.groupName}/participants`, function (participants) {
+                            $("#participant-list-data").empty();
+                            let $tbody = $('<tbody>');
                             for (let participant of participants) {
-                                var coords = participant.coordinates;
-
-                                var track = new google.maps.Polyline({
-                                    map: map,
-                                    path: coords.map((coordinate) => {
-                                        return {lat: coordinate.latitude, lng: coordinate.longitude}
-                                    }),
-                                    geodesic: true,
-                                    strokeColor: participant.color,
-                                    strokeOpacity: 0.5,
-                                    strokeWeight: 4
+                                let $removeButton = $("<button>").addClass("btn").addClass("btn-danger").text("go underwater");
+                                $removeButton.click(function (e) {
+                                    $.ajax({
+                                        method: 'delete',
+                                        url: `/api/group/participant/${participant.id}`,
+                                        success: function () {
+                                            loadParticipants();
+                                        }
+                                    });
                                 });
+                                let $row = $('<tr>')
+                                    .append($('<td>').text(participant.label))
+                                    .append($('<td>').text(participant.color));
+
+
+                                if (participant.label == p.label) {
+                                    $row.append($('<td>').append($removeButton));
+                                }
+                                else {
+                                    $row.append($('<td>'));
+                                }
+                                $tbody.append($row);
+
+                            }
+                            let $table = $('<table>').append($thead).append($tbody);
+                            $table.addClass("table-striped");
+                            linkParent.empty().append($table);
+
+
+                            ////initializing the map
+
+
+                            function drawTraces(participants) {
+                                for (let participant of participants) {
+                                    var coords = participant.coordinates;
+
+                                    var track = new google.maps.Polyline({
+                                        map: map,
+                                        path: coords.map((coordinate) => {
+                                            return {lat: coordinate.latitude, lng: coordinate.longitude}
+                                        }),
+                                        geodesic: true,
+                                        strokeColor: participant.color,
+                                        strokeOpacity: 0.5,
+                                        strokeWeight: 4
+                                    });
+
+                                }
 
                             }
 
-                        }
-                        drawTraces(participants);
+                            drawTraces(participants);
 
 
-
-                    });
-
+                        });
 
 
-                }
-                var infoWindow = new google.maps.InfoWindow;
-
-                function getCoordinates() {
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(function (position) {
-
-                                let coord = {
-                                    timeStamp: 'todo',
-                                    longitude: position.coords.longitude,
-                                    latitude: position.coords.latitude
-                                };
-
-                                //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
-                                //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
-                                //de tabel "coordinaten" is een embedded tabel van participanten. Kan ik daarvoor een repository/restcontroller voor schrijven                                thisParticipant.coordinates.push(coord);
-                                console.log(JSON.stringify(coord))
-                                console.log(coord);
-
-                                let path='/api/group/participant/coordinates/' + thisLabel;
-                                $.ajax({
-                                    method: 'put',
-                                    url: path,
-                                    contentType: 'application/json',
-                                    data: JSON.stringify(coord), // Better way to do this?
-                                    processData: false,
-                                    success: function () {
-                                        // Refresh data table
-                                        alert('succes');
-
-                                    }
-                                });
-
-                        }
-                        , function () {
-                            handleLocationError(true, infoWindow, map.getCenter());
-                        }, {timeout: 10000})
-                    } else {
-                        // Browser doesn't support Geolocation
-                        handleLocationError(false, infoWindow, map.getCenter());
                     }
+
+                    var infoWindow = new google.maps.InfoWindow;
+
+                    function getCoordinates() {
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(function (position) {
+
+                                    let coord = {
+                                        timeStamp: Date.now(),
+                                        longitude: position.coords.longitude,
+                                        latitude: position.coords.latitude
+                                    };
+
+                                    //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
+                                    //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
+                                    //de tabel "coordinaten" is een embedded tabel van participanten. Kan ik daarvoor een repository/restcontroller voor schrijven                                thisParticipant.coordinates.push(coord);
+                                    console.log(JSON.stringify(coord))
+                                    console.log(coord);
+
+                                    let path = '/api/group/participant/coordinates/' + thisLabel;
+                                    $.ajax({
+                                        method: 'put',
+                                        url: path,
+                                        contentType: 'application/json',
+                                        data: JSON.stringify(coord), // Better way to do this?
+                                        processData: false,
+                                        success: function () {
+                                            // Refresh data table
+                                            loadParticipants();
+
+                                        }
+                                    });
+
+                                }
+                                , function () {
+                                    handleLocationError(true, infoWindow, map.getCenter());
+                                }, {timeout: 10000})
+                        } else {
+                            // Browser doesn't support Geolocation
+                            handleLocationError(false, infoWindow, map.getCenter());
+                        }
+                    }
+
+                    getCoordinates();
+
+                    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent(browserHasGeolocation ?
+                            'Error: The Geolocation service failed.' :
+                            'Error: Your browser doesn\'t support geolocation.');
+                        infoWindow.open(map);
+                    }
+
                 }
-                getCoordinates();
-                function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                infoWindow.setPosition(pos);
-                infoWindow.setContent(browserHasGeolocation ?
-                    'Error: The Geolocation service failed.' :
-                    'Error: Your browser doesn\'t support geolocation.');
-                infoWindow.open(map);
-            }
-
-
 
             });
 

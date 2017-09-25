@@ -1,5 +1,5 @@
-insert into tracker_group(id,group_name) values(10,'FightBataljon');
-insert into tracker_group(id,group_name) values(11,'ChinaTown');
+insert into tracker_group(id,group_name) values(10,'Knights saying NI');
+insert into tracker_group(id,group_name) values(11,'Dirty Harries');
 
 insert into participant(id, label,trace_record, color, group_id) values(2000, 'Jimi', 'logcord257',    "darkblue", 10);
 insert into participant(id, label,trace_record, color, group_id) values(2001, 'Natascha', 'logcord315',"green", 10);

@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * Created by vdabcursist on 19/09/2017.
  */
-
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames =
+                { "label", "group_id" }) })
 @Entity
 public class Participant {
     @Id
@@ -42,8 +43,10 @@ public class Participant {
 
     public Participant(){}
     public Participant(String label, String traceRecord) {
+
         this.label = label;
         this.traceRecord = traceRecord;
+        this.color = "Aquamarine";
     }
 
     public Integer getId() {
