@@ -13,7 +13,7 @@
     <meta charset="UTF-8"/>
     <style>
     #map {
-        height: 400px;
+        height: 600px;
         width: 100%;
         background: red;
     }
@@ -24,12 +24,12 @@
 
 <div id="ultimate-parent" class="container">
     <div id="register-form">
-    <table class="table table-striped" id = "legend">
+    <table class="table table-condensed" id = "legend">
         <thead>
         <tr>
-            <th>track Label</th>
+            <th>who?</th>
             <th>color</th>
-            <th>Desactivate Your tracking</th>
+            <th>state</th>
         </tr>
         </thead>
         <tbody id="participant-list-data">
@@ -46,11 +46,16 @@
             <input class="form-control" id="label" name="label"/>
         </div>
 
-        <input type="submit" class="btn btn-primary" value="Create">
+        <input type="submit" class="btn btn-success" value="CREATE">
+        <button type="button" class="btn btn-success" onclick="window.location.href='/index.html'">GO BACK</button>
     </form>
     </div>
+
 </div>
-<div id="map"></div>
+<div class = "container">
+    <div id="map"></div>
+</div>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvqVBvWAak2PLh0YEEwWHx780LEXX72kk&callback=initMap">
 </script>
@@ -92,8 +97,8 @@
 
 
                     let $row= $('<tr>')
-                        .append($('<th>').text("track names"))
-                        .append($('<th>').text('track color'))
+                        .append($('<th>').text("who?"))
+                        .append($('<th>').text('color'))
                         .append($('<th>').text('state'));
                     var $thead=$('<thead>').append($row);
                    // $table.append($thead);
@@ -117,7 +122,7 @@
 
                 var uluru = {lat: 50.8505, lng: 4.7233};
                 var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 12,
+                    zoom: 15,
                     center: uluru,
                     //mapTypeId: 'terrain'
                 });
@@ -150,7 +155,8 @@
                             $tbody.append($row);
 
                         }
-                        let  $table=$('<table>').append($thead).append($tbody).addClass("table table-striped");
+                        let  $table=$('<table>').append($thead).append($tbody);
+                        $table.addClass("table-striped");
                         linkParent.append($table);
 
 
@@ -169,7 +175,7 @@
                                     }),
                                     geodesic: true,
                                     strokeColor: participant.color,
-                                    strokeOpacity: 0.7,
+                                    strokeOpacity: 0.5,
                                     strokeWeight: 4
                                 });
 
@@ -190,36 +196,32 @@
                 function getCoordinates() {
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(function (position) {
-                            var pos = {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude
-                            };
 
-                            $.getJSON(`/api/group/participant/${thisLabel}`,function(thisParticipant) {
                                 let coord = {
                                     timeStamp: 'todo',
-                                    longitude: pos.lng,
-                                    latitude: pos.lat
+                                    longitude: position.coords.longitude,
+                                    latitude: position.coords.latitude
                                 };
 
                                 //ik slaag erin om de coordinaten toe te voegen aan het object thiParticipant, maar kan
                                 //de update niet in de database wegschrijven, nochtans bestaat de id, dus update
                                 //de tabel "coordinaten" is een embedded tabel van participanten. Kan ik daarvoor een repository/restcontroller voor schrijven                                thisParticipant.coordinates.push(coord);
-                                console.log(thisParticipant.id)
+                                console.log(JSON.stringify(coord))
+                                console.log(coord);
+
+                                let path='/api/group/participant/coordinates/' + thisLabel;
                                 $.ajax({
                                     method: 'put',
-                                    url: '/api/group/participant/' + thisLabel,
+                                    url: path,
                                     contentType: 'application/json',
-                                    data: JSON.stringify(thisParticipant), // Better way to do this?
+                                    data: JSON.stringify(coord), // Better way to do this?
                                     processData: false,
                                     success: function () {
                                         // Refresh data table
-
+                                        alert('succes');
 
                                     }
                                 });
-
-                        })
 
                         }
                         , function () {

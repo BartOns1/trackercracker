@@ -4,6 +4,8 @@ package be.trackercracker.web;
  * Created by vdabcursist on 20/09/2017.
  */
 
+import be.trackercracker.domain.Coordinate;
+import jdk.nashorn.internal.runtime.Undefined;
 import org.springframework.web.bind.annotation.RestController;
 
 import be.trackercracker.domain.Participant;
@@ -64,11 +66,37 @@ public class MyParticipantController {
         return new ResponseEntity<>(input, HttpStatus.CREATED);
     }
 
+
+
+    @RequestMapping(method = RequestMethod.PUT, path="/coordinates/{name}",consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Void> addCoordinates(@PathVariable("name") String name, @RequestBody Coordinate input){
+        if(input.getTime() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            Participant participant = participantRepository.findByLabel(name);
+            participant.getCoordinates().add(input);
+            System.out.println(input.toString());
+            System.out.println(participant.toString());
+
+            participantRepository.save(participant);
+            return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+    //
+
+    // talk to repo: find Participant by id, add coordinate to partipant getCoordinates().add(c), then save paricipant
+
+
+
+
     @RequestMapping(method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<Participant> update(@RequestBody Participant input) {
         if(input.getId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         participantRepository.save(input);
         return new ResponseEntity<>(input, HttpStatus.OK);
     }
+
+
+
 
 }
