@@ -70,15 +70,24 @@
                     color: "cyan"
                 };
 
-                $.getJSON(`/api/group/participant/${thisLabel}`,function (participant){
-                    alert('This name already exist in your tracking group')
-                    console.log(participant);
+                var nameExistInGroup = false;
+
+                $.ajaxSetup({
+                    async: false
+                });
+                    $.getJSON(`/api/group/participant/${thisLabel}`,function (participant){
+                    nameExistInGroup = true;
+                    return nameExistInGroup;
+                });
+
+                $.ajaxSetup({
+                    async: true
                 });
 
 
                 if (g==null || g==undefined){
                     alert('This group name does not exist, type an existing tracking group name or go back to make a new group');
-                }
+                } else if (nameExistInGroup){alert('This user track name already exist, choose a different one')}
 
                 else {
 
@@ -94,7 +103,7 @@
 
                     let $row = $('<tr>')
                         .append($('<th>').text("Name Members||"))
-                        .append($('<th>').text('Marker Color||'))
+                        .append($('<th>').text('Col||'))
                         .append($('<th>').text('visibility state'));
                     var $thead = $('<thead>').append($row);
                     // $table.append($thead);
@@ -126,6 +135,8 @@
                     var options;
                     //var target;
                     var path = '/api/group/participant/coordinates/' + thisLabel;
+                    var visibleState=true;
+
                     function success(position) {
                         //var crd = pos.coords;
                         console.log(position);
@@ -170,29 +181,31 @@
                     //};
 
                     options = {
-                        enableHighAccuracy: false,
-                        timeout: 5000,
-                        maximumAge: 0
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 2000
                     };
 
                     geoHandle = navigator.geolocation.watchPosition(success, error, options);
                     console.log(geoHandle);
 
 
-                    var visibleState=true;
-                    let $underwaterButton = $("<button>").addClass("btn").addClass("btn-danger").text("go underwater");
-                    $underwaterButton.click(function (e) {
+
+                    var $underwaterButton = $("<button>").addClass("btn").addClass("btn-warning").text("go underwater");
+/*                    $underwaterButton.click(function (e) {
                         visibleState=false;
                         navigator.geolocation.clearWatch(geoHandle);
+                        console.log(geoHandle);
                         loadParticipants();
-                    });
+                    });*/
 
-                    let $appearButton = $("<button>").addClass("btn").addClass("btn-primary").text("appear");
-                    $appearButton.click(function (e) {
+                    var $appearButton = $("<button>").addClass("btn").addClass("btn-info").text("appear");
+/*                    $appearButton.click(function (e) {
                         visibleState=true;
+                        console.log(geoHandle);
                         geoHandle = navigator.geolocation.watchPosition(success, error, options);
                         loadParticipants();
-                    });
+                    });*/
 
 
                     function loadParticipants() {
@@ -200,19 +213,29 @@
                             $("#participant-list-data").empty();
                             let $tbody = $('<tbody>');
                             for (let participant of participants) {
-
+                                let colorattr="background-color:" + participant.color;
                                 let $row = $('<tr>')
                                     .append($('<td>').text(participant.label))
-                                    .append($('<td>').text(participant.color));
+                                    .append($('<td>').text(" ").attr("style",colorattr));
 
 
                                 if (participant.label == p.label) {
                                     console.log(visibleState);
                                     if (visibleState){
-                                        $row.append($('<td>').append($underwaterButton));
+                                        $row.append($('<td>').append($underwaterButton.click(function (e) {
+                                            visibleState=false;
+                                            navigator.geolocation.clearWatch(geoHandle);
+                                            console.log(geoHandle);
+                                            loadParticipants();
+                                        })));
                                     }
                                     else{
-                                        $row.append($('<td>').append($appearButton));
+                                        $row.append($('<td>').append($appearButton.click(function (e) {
+                                            visibleState=true;
+                                            console.log(geoHandle);
+                                            geoHandle = navigator.geolocation.watchPosition(success, error, options);
+                                            loadParticipants();
+                                        })));
                                     }
                                     }
                                 else {

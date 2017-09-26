@@ -1,9 +1,9 @@
 insert into tracker_group(id,group_name) values(10,'Knights saying NI');
 insert into tracker_group(id,group_name) values(11,'Dirty Harries');
 
-insert into participant(id, label,trace_record, color, group_id) values(2000, 'Jimi', 'logcord257',    "darkblue", 10);
+insert into participant(id, label,trace_record, color, group_id) values(2000, 'Jimi', 'logcord257',    "blue", 10);
 insert into participant(id, label,trace_record, color, group_id) values(2001, 'chacha', 'logcord315',"green", 10);
-insert into participant(id, label,trace_record, color, group_id) values(2002, 'D54','logcord218',   "blue", 10);
+insert into participant(id, label,trace_record, color, group_id) values(2002, 'D54','logcord218',   "yellow", 10);
 insert into participant(id, label,trace_record, color, group_id) values(2003, 'duck','logcord515',"darkred", 10);
 insert into participant(id, label,trace_record, color, group_id) values(2004, 'dude','logcord547', "red",10);
 insert into participant(id, label,trace_record, color, group_id) values(2005, 'zoem', 'logcord214',"black",11);
@@ -27,6 +27,8 @@ insert into participant_coordinates(participant_id, latitude, longitude, time_st
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.849490, 4.725137, '1986-04-08 12:31');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.849280, 4.726837, '1986-04-08 12:32');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2001, 50.848318, 4.727621, '1986-04-08 12:33');
+insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2002, 50.8493, 4.726, '1986-04-08 12:32');
+insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2002, 50.8484, 4.727, '1986-04-08 12:33');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2003, 50.8515, 4.7233, '1986-04-08 12:30');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2003, 50.8516, 4.7234, '1986-04-08 12:30');
 insert into participant_coordinates(participant_id, latitude, longitude, time_stamp) values(2003, 50.8519, 4.7206, '1986-04-08 12:30');
