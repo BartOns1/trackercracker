@@ -290,7 +290,7 @@
                             navigator.geolocation.getCurrentPosition(function (position) {
                                     let now = new Date();
                                     let coord = {
-                                        timeStamp: now,
+                                        timeStamp: now.getTime(),
                                         longitude: position.coords.longitude,
                                         latitude: position.coords.latitude
                                     };

@@ -11,7 +11,7 @@ import java.util.Date;
 public class Coordinate {
 
     @Column
-    private Date timeStamp;
+    private long timeStamp;
     @Column
     private double latitude;
     @Column
@@ -20,18 +20,18 @@ public class Coordinate {
     public Coordinate() {
     }
 
-    public Coordinate(Date timeStamp, double latitude, double longitude) {
+    public Coordinate(long timeStamp, double latitude, double longitude) {
         this.timeStamp = timeStamp;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
 
-    public Date getTime() {
+    public long getTime() {
         return timeStamp;
     }
 
-    public void setTime(Date time) {
+    public void setTime(long time) {
         this.timeStamp = time;
     }
 
